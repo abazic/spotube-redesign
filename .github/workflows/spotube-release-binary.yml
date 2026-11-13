@@ -306,7 +306,7 @@ jobs:
           key: graalvm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('gradle/libs.versions.toml', 'composeApp/build.gradle.kts') }}
           restore-keys: graalvm-${{ runner.os }}-${{ runner.arch }}-
 
-            - name: Package Linux
+      - name: Package Linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
