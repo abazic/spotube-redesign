@@ -345,7 +345,7 @@ jobs:
       - name: Package Linux AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew :composeApp:packageGraalvmAppImage -PappImage=true -Pnightly=${{ inputs.release_type == 'nightly' }} -PbuildNumber=${{ github.run_number }}
+        run: ./gradlew :composeApp:packageGraalvmAppImage -PappImage=true -PskipAndroidRust=true -Pnightly=${{ inputs.release_type == 'nightly' }} -PbuildNumber=${{ github.run_number }}
 
       - name: Rename Linux artifacts
         run: |
