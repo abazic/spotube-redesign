@@ -656,6 +656,18 @@ cargo {
     }
 }
 
+// Gobley assigns nativeStaticLibsDefFile to every Cargo build task, but its parser assumes
+// every Cargo build-script OUT_DIR has an "output" file. JVM desktop builds do not consume
+// this native linker definition; only Kotlin/Native cinterop does. Avoid the unnecessary
+// parser for the Linux JVM host target, where it can fail on crates with no output file.
+afterEvaluate {
+    tasks.matching { it.name.startsWith("cargoBuildLinuxX64") }.configureEach {
+        val nativeStaticLibsDefFile = javaClass.getMethod("getNativeStaticLibsDefFile").invoke(this)
+            as org.gradle.api.file.RegularFileProperty
+        nativeStaticLibsDefFile.unset()
+    }
+}
+
 // Gobley adds build/intermediates/rust/<triple>/<variant> as a jniLibs source dir, but AGP leaves source dirs
 // that don't exist at configuration time out of the merge inputs. On a clean build (CI) libcompose_app.so would
 // then silently miss the APK and crash at runtime with UnsatisfiedLinkError, so create the dirs up front.
