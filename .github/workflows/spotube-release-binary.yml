@@ -313,6 +313,7 @@ jobs:
           rustc --version
           cargo --version
           ./gradlew --max-workers=1 :composeApp:packageGraalvmDeb :composeApp:packageGraalvmRpm \
+            -PskipAndroidRust=true \
             -Pnightly=${{ inputs.release_type == 'nightly' }} \
             -PbuildNumber=${{ github.run_number }} \
             --stacktrace --info
