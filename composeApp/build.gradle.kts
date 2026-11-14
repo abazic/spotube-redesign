@@ -18,6 +18,7 @@
 import gobley.gradle.GobleyHost
 import gobley.gradle.Variant
 import gobley.gradle.cargo.dsl.jvm
+import gobley.gradle.cargo.tasks.CargoBuildTask
 import gobley.gradle.rust.targets.RustAndroidTarget
 import dev.nucleusframework.desktop.application.dsl.NativeImageOptimization
 import dev.nucleusframework.desktop.application.dsl.TargetFormat
@@ -661,9 +662,7 @@ cargo {
 // this native linker definition; only Kotlin/Native cinterop does. Avoid the unnecessary
 // parser for the Linux JVM host target, where it can fail on crates with no output file.
 afterEvaluate {
-    tasks.matching { it.name.startsWith("cargoBuildLinuxX64") }.configureEach {
-        val nativeStaticLibsDefFile = javaClass.getMethod("getNativeStaticLibsDefFile").invoke(this)
-            as org.gradle.api.file.RegularFileProperty
+    tasks.withType<CargoBuildTask>().matching { it.name.startsWith("cargoBuildLinuxX64") }.configureEach {
         nativeStaticLibsDefFile.unset()
     }
 }
