@@ -670,8 +670,10 @@ RustAndroidTarget.entries.forEach { target ->
 run {
     val isLinuxArm64Host = System.getProperty("os.name").lowercase().contains("linux") &&
         System.getProperty("os.arch").lowercase() in setOf("aarch64", "arm64")
-    if (isLinuxArm64Host) {
-        // Gobley generates the UniFFI bindings from the first Android build's library by default; use the host's.
+    val skipAndroidRust = providers.gradleProperty("skipAndroidRust").map { it.toBoolean() }.getOrElse(false)
+    if (isLinuxArm64Host || skipAndroidRust) {
+        // Gobley defaults UniFFI binding generation to an Android build. Desktop packaging
+        // only needs the host library; use it directly and avoid unrelated Android Rust tasks.
         uniffi {
             generateFromLibrary {
                 build = GobleyHost.current.rustTarget
